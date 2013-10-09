@@ -3,7 +3,7 @@
 set -x -e
 
 #
-python create_altesch.py
+python create_aletsch.py
 
 # config file
 CDLCONFIG=aletsch_config.cdl
