@@ -17,7 +17,7 @@ netcdf pism_overrides {
     pism_overrides:ice_softness = 2.55e-24;
     pism_overrides:ice_softness_doc = "Pa-3 s-1; ice softness used by IsothermalGlenIce";
 
-    pism_config:pseudo_plastic_uthreshold = 50.0;
-    pism_config:pseudo_plastic_uthreshold_doc = "m/year; ";
+    pism_overrides:pseudo_plastic_uthreshold = 50.0;
+    pism_overrides:pseudo_plastic_uthreshold_doc = "m/year; ";
 
 }
