@@ -91,7 +91,7 @@ PISM="${PISM_PREFIX}${PISM_EXEC} -title \"$TITLE\" -config_override aletsch_conf
 
 # default choices in parameter study; see Bueler & Brown (2009) re "tillphi"
 PHYSICS="-ssa_sliding  -ssa_flow_law isothermal_glen -sia_flow_law isothermal_glen -ssa_sliding -topg_to_phi 5,40,2000,2400 -pseudo_plastic"
-COUPLER="-surface elevation -ice_surface_temp -5,-25,0,4000 -climatic_mass_balance -5,1,0,2800,4800"
+COUPLER="-surface elevation -ice_surface_temp -5,-25,0,4000 -climatic_mass_balance -7,1.25,0,2800,4800"
 
 echo "$SCRIPTNAME             executable = '$PISM'"
 echo "$SCRIPTNAME           full physics = '$PHYSICS'"
