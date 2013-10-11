@@ -79,7 +79,7 @@ GS=200
 if [ -n "${PISM_DATANAME:+1}" ] ; then  # check if env var is already set
   echo "$SCRIPTNAME   PISM_DATANAME = $PISM_DATANAME  (already set)"
 else
-  PISM_DATANAME=pism_Aletsch_1880.nc
+  PISM_DATANAME=pism_Aletsch_1880_small.nc
 fi
 
 INNAME=$PISM_DATANAME
@@ -89,7 +89,7 @@ OSIZE="medium"
 
 PISM="${PISM_PREFIX}${PISM_EXEC} -title \"$TITLE\" -config_override aletsch_config.nc"
 PHYSICS="-no_energy -ssa_sliding  -ssa_flow_law isothermal_glen -sia_flow_law isothermal_glen -ssa_sliding -topg_to_phi 5,40,2000,2400 -pseudo_plastic"
-COUPLER="-surface elevation -ice_surface_temp -5,-25,0,4000 -climatic_mass_balance -2,1.25,1600,2800,4800 -climatic_mass_balance_limits -50,1.25"
+COUPLER="-surface given -surface_given_file huss_cmb_1865-2008.nc"
 
 echo "$SCRIPTNAME             executable = '$PISM'"
 echo "$SCRIPTNAME           full physics = '$PHYSICS'"
@@ -103,8 +103,10 @@ TSNAME=ts_$OUTNAME
 EXVARS="usurf,grounded_basal_flux_cumulative,bwat,nonneg_flux_cumulative,h_x,h_y,bmelt,strain_rates,csurf,lon,diffusivity,taud_mag,ocean_kill_flux_cumulative,climatic_mass_balance_cumulative,bwp,hardav,topg,velbar,tauc,lat,taud,bfrict,mask,Href,thk,temppabase,cbase,diffusivity_staggered,IcebergMask,tempicethk_basal"
 
 echo""
-cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME $SKIP $GRID $PHYSICS $COUPLER -o_size $OSIZE -extra_times monthly -extra_vars $EXVARS -extra_file $EXNAME -ts_times daily -ts_file $TSNAME -o $OUTNAME -y 50 -o_format $OFORMAT"
+cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME $SKIP $GRID $PHYSICS $COUPLER -o_size $OSIZE -extra_times monthly -extra_vars $EXVARS -extra_file $EXNAME -ts_times daily -ts_file $TSNAME -o $OUTNAME -time_file time_1880-2000.nc -calendar gregorian -o_format $OFORMAT"
 $PISM_DO $cmd
+
+exit
 
 STARTNAME=$OUTNAME
 GRID='-Mx 176 -My 339 -Mz 50 -Lz 1000'
