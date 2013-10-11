@@ -89,7 +89,7 @@ OSIZE="medium"
 
 PISM="${PISM_PREFIX}${PISM_EXEC} -title \"$TITLE\" -config_override aletsch_config.nc"
 PHYSICS="-no_energy -ssa_sliding  -ssa_flow_law isothermal_glen -sia_flow_law isothermal_glen -ssa_sliding -topg_to_phi 5,40,2000,2400 -pseudo_plastic"
-COUPLER="-surface given -surface_given_file huss_cmb_1865-2008.nc"
+COUPLER="-surface given -surface_given_file aletsch_cmb_1880-2008.nc"
 
 echo "$SCRIPTNAME             executable = '$PISM'"
 echo "$SCRIPTNAME           full physics = '$PHYSICS'"
