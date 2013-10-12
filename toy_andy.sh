@@ -79,7 +79,7 @@ GS=200
 if [ -n "${PISM_DATANAME:+1}" ] ; then  # check if env var is already set
   echo "$SCRIPTNAME   PISM_DATANAME = $PISM_DATANAME  (already set)"
 else
-  PISM_DATANAME=pism_Aletsch_1880_small.nc
+  PISM_DATANAME=pism_Aletsch_1880.nc
 fi
 
 INNAME=$PISM_DATANAME
