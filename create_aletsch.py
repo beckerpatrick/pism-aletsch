@@ -51,7 +51,7 @@ acab = np.zeros((Mx,My));
 artm = np.zeros((Mx,My)) + 273.15 + 10.0; # 10 degrees Celsius
 
 # Output filename
-ncfile = 'pism_Altesch_1880.nc'
+ncfile = 'pism_Aletsch_1880.nc'
 
 # Write the data:
 nc = CDF(ncfile, "w",format='NETCDF3_CLASSIC') # for netCDF4 module

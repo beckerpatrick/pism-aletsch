@@ -13,4 +13,11 @@ netcdf pism_overrides {
 
     pism_overrides:summary_area_scale_factor_log10 = 0;
     pism_overrides:summary_area_scale_factor_log10_doc = "; an integer; log base 10 of scale factor to use for area (in km^2) in summary line to stdout";
+
+    pism_overrides:ice_softness = 2.25e-24;
+    pism_overrides:ice_softness_doc = "Pa-3 s-1; ice softness used by IsothermalGlenIce";
+
+    pism_overrides:pseudo_plastic_uthreshold = 50.0;
+    pism_overrides:pseudo_plastic_uthreshold_doc = "m/year; ";
+
 }
