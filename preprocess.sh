@@ -15,8 +15,9 @@ python create_aletsch_1880.py
 # attribute 'projection' and as a command line option --srs. 
 # '--srs' accepts valid proj4 strings and epsg codes.
 nc2cdo.py --srs $srs pism_Aletsch_1880.nc
-./create_aletsch_2009.sh
-
+gdalwarp -overwrite -s_srs epsg:21781 -te 633975 123575 651525 157525 -t_srs epsg:21781 -tr 50 50 -r bilinear data/aletsch_surface_2009.grid data/aletsch_surface_2009_50m.grid
+python create_aletsch_2009.py
+nc2cdo.py --srs $srs pism_Aletsch_2009.nc
 
 cmb_prefix=aletsch_cmb_1865-2008
 cmb_file_orig=${cmb_prefix}_orig.nc
