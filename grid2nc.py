@@ -111,7 +111,7 @@ def create_outfile(f, outname):
     easting = np.arange(ulx+rezX/2, rx + rezX/2, rezX)
     northing = np.arange(ly+rezY/2, uly +rezY/2, -rezY)
 
-    nc = NC(outname, 'w', format='NETCDF4')
+    nc = NC(outname, 'w', format='NETCDF3_CLASSIC')
     # create a new dimension for bounds only if it does not yet exist
     time_dim = "time"
     if time_dim not in nc.dimensions.keys():
@@ -161,7 +161,7 @@ def create_outfile(f, outname):
 
     cmb_var = nc.createVariable('climatic_mass_balance', 'f',
                                    dimensions= (time_dim, y_dim, x_dim),
-        fill_value=fill_value, zlib=True, complevel=3)
+        fill_value=fill_value)
     cmb_var.units = 'mm day-1'    
     cmb_var.long_name = "ice-equivalent surface mass balance (accumulation/ablation) rate" ;
     cmb_var.standard_name = "land_ice_surface_specific_mass_balance" ;
@@ -170,7 +170,7 @@ def create_outfile(f, outname):
 
     temp_var = nc.createVariable('ice_surface_temp', 'f',
                                  dimensions=(time_dim, y_dim, x_dim),
-        fill_value=fill_value, zlib=True, complevel=3)
+        fill_value=fill_value)
     temp_var.long_name = 'ice temperature at the ice surface'
     temp_var.units = 'degC'
     temp_var.comment = '''Made up.'''
