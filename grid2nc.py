@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Copyright (C) 2013 Andy Aschwanden
 #
+# creates mass balance from .grid files
 
 import numpy as np
 from dateutil import rrule
