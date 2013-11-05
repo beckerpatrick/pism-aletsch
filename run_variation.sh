@@ -88,7 +88,16 @@ else
   echo "$SCRIPTNAME                       PISM_EXEC = $PISM_EXEC"
 fi
 
-PISM="${PISM_PREFIX}${PISM_EXEC} -config_override aletsch_config.nc"
+# set PISM_CONFIG if using different executables, for example:
+#  $ export PISM_CONFIG="pismr -cold"
+if [ -n "${PISM_CONFIG:+1}" ] ; then  # check if env var is already set
+  echo "$SCRIPTNAME                       PISM_CONFIG = $PISM_CONFIG  (already set)"
+else
+  PISM_CONFIG="aletsch_config.nc"
+  echo "$SCRIPTNAME                       PISM_CONFIG = $PISM_CONFIG"
+fi
+
+PISM="${PISM_PREFIX}${PISM_EXEC} -config_override $PISM_CONFIG"
 
 PHI_LOW=$PISM_PHI_LOW
 PHI_HIGH=$PISM_PHI_HIGH

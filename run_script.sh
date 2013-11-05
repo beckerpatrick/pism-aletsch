@@ -32,7 +32,7 @@ fi
 if [ -n "${PISM_WALLTIME:+1}" ] ; then  # check if env var is already set
   echo "$SCRIPTNAME                    PISM_WALLTIME = $PISM_WALLTIME  (already set)"
 else
-  PISM_WALLTIME=48:00:00
+  PISM_WALLTIME=8:00:00
   echo "$SCRIPTNAME                     PISM_WALLTIME = $PISM_WALLTIME"
 fi
 WALLTIME=$PISM_WALLTIME
@@ -98,6 +98,7 @@ do
       export PISM_PHI_LOW=$phi_lowVAL
       export PISM_PHI_HIGH=$phi_highVAL
       export PISM_RATEFACTOR=$ice_softnessVAL
+      export PISM_CONFIG=$CONFIG_FILE
 
 # Run (all) the experiments
       
