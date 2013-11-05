@@ -41,15 +41,15 @@ WALLTIME=$PISM_WALLTIME
 if [ -n "${PISM_NODES:+1}" ] ; then  # check if env var is already set
   echo "$SCRIPTNAME                    PISM_NODES = $PISM_NODES  (already set)"
 else
-  PISM_NODES=8
+  PISM_NODES=1
   echo "$SCRIPTNAME                     PISM_NODES = $PISM_NODES"
 fi
 NODES=$PISM_NODES
 
  SHEBANGLINE="#!/bin/bash"
-MPIQUEUELINE="#PBS -q standard_16"
+MPIQUEUELINE="#PBS -q standard_4"
  MPITIMELINE="#PBS -l walltime=$WALLTIME"
- MPISIZELINE="#PBS -l nodes=$NODES:ppn=16"
+ MPISIZELINE="#PBS -l nodes=$NODES:ppn=4"
   MPIOUTLINE="#PBS -j oe"
 
 # params in nested for loop:
@@ -88,7 +88,7 @@ do
       echo $MPISIZELINE >> $SCRIPT
       echo $MPIOUTLINE >> $SCRIPT
       echo >> $SCRIPT # add newline
-#      echo "cd \$PBS_O_WORKDIR" >> $SCRIPT
+      echo "cd \$PBS_O_WORKDIR" >> $SCRIPT
       echo >> $SCRIPT # add newline
 
       export PISM_CONFIG=$CONFIG_FILE

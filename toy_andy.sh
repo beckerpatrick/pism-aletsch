@@ -88,7 +88,7 @@ OSIZE="medium"
 
 
 PISM="${PISM_PREFIX}${PISM_EXEC} -title \"$TITLE\" -config_override aletsch_config.nc"
-PHYSICS="-no_energy -ssa_sliding  -ssa_flow_law isothermal_glen -sia_flow_law isothermal_glen -ssa_sliding -topg_to_phi 5,40,2000,2400 -pseudo_plastic"
+PHYSICS="-no_energy -ssa_sliding  -ssa_flow_law isothermal_glen -sia_flow_law isothermal_glen -ssa_sliding -topg_to_phi 5,45,2395,2400 -pseudo_plastic"
 COUPLER="-surface given -surface_given_file aletsch_cmb_1865-2008.nc"
 
 echo "$SCRIPTNAME             executable = '$PISM'"
@@ -100,10 +100,10 @@ echo ""
 OUTNAME=aletsch_${GS}m_ssa.nc
 EXNAME=ex_$OUTNAME
 TSNAME=ts_$OUTNAME
-EXVARS="usurf,grounded_basal_flux_cumulative,bwat,nonneg_flux_cumulative,h_x,h_y,bmelt,strain_rates,csurf,lon,diffusivity,taud_mag,ocean_kill_flux_cumulative,climatic_mass_balance_cumulative,bwp,hardav,topg,velbar,tauc,lat,taud,bfrict,mask,Href,thk,temppabase,cbase,diffusivity_staggered,IcebergMask,tempicethk_basal"
+EXVARS="usurf,grounded_basal_flux_cumulative,bwat,nonneg_flux_cumulative,h_x,h_y,bmelt,strain_rates,csurf,lon,diffusivity,taud_mag,ocean_kill_flux_cumulative,climatic_mass_balance_cumulative,bwp,hardav,topg,velbar,tauc,lat,taud,bfrict,mask,Href,thk,temppabase,cbase,diffusivity_staggered,IcebergMask,tempicethk_basal,dHdt,flux_divergence"
 
 echo""
-cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME $SKIP $GRID $PHYSICS $COUPLER -o_size $OSIZE -extra_times monthly -extra_vars $EXVARS -extra_file $EXNAME -ts_times daily -ts_file $TSNAME -o $OUTNAME -time_file time_1880-2000.nc -calendar gregorian -o_format $OFORMAT"
+cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME $SKIP $GRID $PHYSICS $COUPLER -o_size $OSIZE -extra_times monthly -extra_vars $EXVARS -extra_file $EXNAME -ts_times daily -ts_file $TSNAME -o $OUTNAME -time_file time_1880-2000.nc -calendar gregorian -o_order zyx -o_format $OFORMAT"
 $PISM_DO $cmd
 
 exit

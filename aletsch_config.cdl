@@ -2,7 +2,7 @@ netcdf pism_overrides {
     variables:
     byte pism_overrides;
 
-   pism_overrides:run_title = "PISM Alteschgletscher";
+   pism_overrides:run_title = "PISM Aletschgletscher";
    pism_overrides:run_title_doc = "Free-form string containing a concise description of the current run. This string is written to output files as the 'title' global attribute.";
 
     pism_overrides:bed_smoother_range = 0.;
