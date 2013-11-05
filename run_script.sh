@@ -97,6 +97,7 @@ do
 
       export PISM_PHI_LOW=$phi_lowVAL
       export PISM_PHI_HIGH=$phi_highVAL
+      export PISM_RATEFACTOR=$ice_softnessVAL
 
 # Run (all) the experiments
       
