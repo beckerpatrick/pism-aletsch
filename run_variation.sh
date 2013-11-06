@@ -11,37 +11,39 @@ fi
 
 echo "$SCRIPTNAME                              NN = $NN"
 
+# default values if no argument is given
 Mx=45
 My=86
 SKIP=10
-
+GS=400
 if [ $# -gt 1 ] ; then
   if [ $2 -eq "1" ] ; then  # if user says "spinup.sh N 1" then use:
     echo "# grid: coarsest"
       Mx=45
       My=86
       SKIP=10
-
+      GS=400
   fi
   if [ $2 -eq "2" ] ; then  # if user says "spinup.sh N 2" then use:
     echo "# grid: coarse"
-      Mx=89
+      Mx=88
       My=169
       SKIP=50
-
+      GS=200
   fi
   if [ $2 -eq "3" ] ; then  # if user says "spinup.sh N 3" then use:
     echo "# grid: fine"
       Mx=176
       My=339
       SKIP=100
-
+      GS=100
   fi
   if [ $2 -eq "4" ] ; then  # if user says "spinup.sh N 4" then use:
     echo "# grid: finest"
       Mx=351
       My=679
       SKIP=500
+      GS=50
   fi
 fi
 
@@ -88,8 +90,8 @@ else
   echo "$SCRIPTNAME                       PISM_EXEC = $PISM_EXEC"
 fi
 
-# set PISM_CONFIG if using different executables, for example:
-#  $ export PISM_CONFIG="pismr -cold"
+# set PISM_CONFIG if using different config file, for example:
+#  $ export PISM_CONFIG="aletsch_config.nc"
 if [ -n "${PISM_CONFIG:+1}" ] ; then  # check if env var is already set
   echo "$SCRIPTNAME                       PISM_CONFIG = $PISM_CONFIG  (already set)"
 else
@@ -97,6 +99,34 @@ else
   echo "$SCRIPTNAME                       PISM_CONFIG = $PISM_CONFIG"
 fi
 
+# set PISM_PHI_LOW if using different phi, for example:
+#  $ export PISM_PHI_LOW="aletsch_config.nc"
+if [ -n "${PISM_PHI_LOW:+1}" ] ; then  # check if env var is already set
+  echo "$SCRIPTNAME                       PISM_PHI_LOW = $PISM_PHI_LOW  (already set)"
+else
+  PISM_PHI_LOW=5
+  echo "$SCRIPTNAME                       PISM_PHI_LOW = $PISM_PHI_LOW"
+fi
+
+# set PISM_PHI_HIGH if using different phi, for example:
+#  $ export PISM_PHI_HIGH=45
+if [ -n "${PISM_PHI_HIGH:+1}" ] ; then  # check if env var is already set
+  echo "$SCRIPTNAME                       PISM_PHI_HIGH = $PISM_PHI_HIGH  (already set)"
+else
+  PISM_PHI_HIGH=45
+  echo "$SCRIPTNAME                       PISM_PHI_HIGH = $PISM_PHI_HIGH"
+fi
+
+# set PISM_PHI_RATEFACTOR if using different phi, for example:
+#  $ export PISM_PHI_RATEFACTOR=45
+if [ -n "${PISM_PHI_RATEFACTOR:+1}" ] ; then  # check if env var is already set
+  echo "$SCRIPTNAME                       PISM_PHI_RATEFACTOR = $PISM_PHI_RATEFACTOR  (already set)"
+else
+  PISM_PHI_RATEFACTOR="2e-24"
+  echo "$SCRIPTNAME                       PISM_PHI_RATEFACTOR = $PISM_PHI_RATEFACTOR"
+fi
+
+# cat stuff together
 PISM="${PISM_PREFIX}${PISM_EXEC} -config_override $PISM_CONFIG"
 
 PHI_LOW=$PISM_PHI_LOW
@@ -105,28 +135,27 @@ RATE_FACTOR=$PISM_RATEFACTOR
 
 Mz=50
 
+
 GRID="-Mx $Mx -My $My -Mz $Mz -Lz 1000"
 COUPLER="-surface given -surface_given_file mb2008.nc"
 PHYSICS="-ssa_sliding -pseudo_plastic -pseudo_plastic_q 0.333333 -pseudo_plastic_uthreshold 50 -topg_to_phi $PHI_LOW,$PHI_HIGH,2399,2400 -sia_flow_law isothermal_glen -ssa_flow_law isothermal_glen -no_energy"
 INNAME=pism_Aletsch_2009.nc
 
-EXVARS="usurf,grounded_basal_flux_cumulative,bwat,nonneg_flux_cumulative,h_x,h_y,bmelt,strain_rates,csurf,lon,diffusivity,taud_mag,ocean_kill_flux_cumulative,climatic_mass_balance_cumulative,bwp,hardav,topg,velbar,tauc,lat,taud,bfrict,mask,Href,thk,temppabase,cbase,diffusivity_staggered,IcebergMask,tempicethk_basal,dHdt,flux_divergence"
+echo "$SCRIPTNAME             executable = '$PISM'"
+echo "$SCRIPTNAME           full physics = '$PHYSICS'"
+echo "$SCRIPTNAME                coupler = '$COUPLER'"
+echo "$SCRIPTNAME                   grid = '$GRID' (= $GS m)"
+echo ""
 
-START=0
-END=0
+EXVARS="usurf,h_x,h_y,csurf,lon,diffusivity,taud_mag,hardav,topg,velbar,tauc,lat,taud,mask,thk,cbase,diffusivity_staggered,dHdt,flux_divergence"
 
-# mpirun -np 4 pismr -config_override aletsch_config.nc -boot_file $INNAME -Mx $Mx -My $My -Mz $Mx -Lz 1000 -sia_flow_law isothermal_glen -no_energy -surface elevation -ice_surface_temp -5,-25,0,4000 -climatic_mass_balance -1.55,1.1,0,2800,4800 -o_order zyx -ts_file ts_coarse.nc -ts_times $START:yearly:$END -o coarse.nc -o_size big -ys $START -ye $END
 
-# steady state (ss)
-#OUTNAME=ss_low_${PHI_LOW}high${PHI_HIGH}-${RATE_FACTOR}.nc
-#OUTNAME_EXTRA=ex_$OUTNAME
-
-#echo "mpirun -np $NN pismr -config_override $PISM_CONFIG -boot_file $INNAME -Mx $Mx -My $My -Mz $Mx -Lz 1000 -ssa_sliding -pseudo_plastic -pseudo_plastic_q 0.333333 -pseudo_plastic_uthreshold 50 -sia_flow_law isothermal_glen -ssa_flow_law isothermal_glen -no_energy -surface given -surface_given_file mb2008.nc -o_order zyx -ts_file ts_sliding.nc -topg_to_phi $PHI_LOW,$PHI_HIGH,2399,2400  -ts_times $START:daily:$END -o $OUTNAME -o_size big -ys $START -ye $END"
-
-OUTNAME=low_${PHI_LOW}high${PHI_HIGH}-${RATE_FACTOR}.nc
+OUTNAME=a${GS}m_low_${PHI_LOW}_high_${PHI_HIGH}-${RATE_FACTOR}.nc
 OUTNAME_EXTRA=ex_$OUTNAME
+START=0
 END=5
+EXSTEP=monthly
 
 echo""
-cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME -skip -skip_max $SKIP $GRID $COUPLER $PHYSICS -extra_file $OUTNAME_EXTRA -extra_times $START:monthly:$END -extra_vars $EXVARS -o_order zyx  -o $OUTNAME -o_size big -ys $START -ye $END"
+cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME -skip -skip_max $SKIP $GRID $COUPLER $PHYSICS -extra_file $OUTNAME_EXTRA -extra_times $EXSTEP -extra_vars $EXVARS -o_order zyx  -o $OUTNAME -o_size big -ys $START -ye $END"
 $PISM_DO $cmd
