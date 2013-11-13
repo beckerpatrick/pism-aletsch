@@ -139,7 +139,7 @@ Mz=50
 GRID="-Mx $Mx -My $My -Mz $Mz -Lz 1000"
 COUPLER="-surface given -surface_given_file mb2008.nc"
 PHYSICS="-ssa_sliding -pseudo_plastic -pseudo_plastic_q 0.333333 -pseudo_plastic_uthreshold 50 -topg_to_phi $PHI_LOW,$PHI_HIGH,2399,2400 -sia_flow_law isothermal_glen -ssa_flow_law isothermal_glen -no_energy"
-INNAME=pism_Aletsch_2009.nc
+INNAME=pism_Aletsch_1880.nc
 
 echo "$SCRIPTNAME             executable = '$PISM'"
 echo "$SCRIPTNAME           full physics = '$PHYSICS'"
@@ -149,12 +149,12 @@ echo ""
 
 EXVARS="usurf,h_x,h_y,csurf,lon,diffusivity,taud_mag,hardav,topg,velbar,tauc,lat,taud,mask,thk,cbase,diffusivity_staggered,dHdt,flux_divergence"
 
-
-OUTNAME=a${GS}m_low_${PHI_LOW}_high_${PHI_HIGH}-${RATE_FACTOR}.nc
+RUNLENGTH=100
+OUTNAME=a${GS}m_low_${PHI_LOW}_high_${PHI_HIGH}-${RATE_FACTOR}_${RUNLENGTH}a.nc
 OUTNAME_EXTRA=ex_$OUTNAME
 START=0
-END=5
-EXSTEP=monthly
+END=$RUNLENGTH
+EXSTEP=yearly
 
 echo""
 cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME -skip -skip_max $SKIP $GRID $COUPLER $PHYSICS -extra_file $OUTNAME_EXTRA -extra_times $EXSTEP -extra_vars $EXVARS -o_order zyx  -o $OUTNAME -o_size big -ys $START -ye $END"
