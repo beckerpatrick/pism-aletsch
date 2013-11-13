@@ -157,5 +157,5 @@ END=$RUNLENGTH
 EXSTEP=yearly
 
 echo""
-cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME -skip -skip_max $SKIP $GRID $COUPLER $PHYSICS -extra_file $OUTNAME_EXTRA -extra_times $EXSTEP -extra_vars $EXVARS -o_order zyx  -o $OUTNAME -o_size big -ys $START -ye $END"
+cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME -skip -skip_max $SKIP $GRID $COUPLER $PHYSICS -extra_file $OUTNAME_EXTRA -extra_times $EXSTEP -extra_vars $EXVARS -o_order zyx  -o $OUTNAME -o_size big -ys $START -ye $END 2>&1 | tee job.\${PBS_JOBID}"
 $PISM_DO $cmd
