@@ -21,7 +21,7 @@ Mx = len(x)
 My = len(y)
 
 
-hx = np.squeeze(nc.variables['h_x_i'][0,:])
+hx = np.squeeze(nc.variables['h_x_i'][0,:]) # 0: only 1st time step
 hy = np.squeeze(nc.variables['h_y_j'][0,:])
 grad_h_mag = np.sqrt(hx**2 + hy**2)
 
