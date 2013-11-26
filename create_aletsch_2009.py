@@ -91,6 +91,10 @@ thk_var = def_var(nc, "thk", "m", fill_value)
 thk_var.standard_name = "land_ice_thickness"
 thk_var[:] = thk
 
+usurf_var = def_var(nc, "usurf", "m", fill_value)
+usurf_var.standard_name = "surface_altitude"
+usurf_var[:] = Usurf
+
 acab_var = def_var(nc, "climatic_mass_balance", "m year-1", fill_value)
 acab_var.standard_name = "land_ice_surface_specific_mass_balance"
 acab_var[:] = acab

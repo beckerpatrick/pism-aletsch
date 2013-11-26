@@ -69,10 +69,34 @@ fi
 TITLE=$PISM_TITLE
 
 
-# defaults to coarse grid choices
-GRID='-Mx 88 -My 169 -Mz 50 -Lz 1000'
-SKIP='-skip -skip_max 100'
-GS=200
+# default values if no argument is given
+Mx=45
+My=86
+SKIP=10
+GS=400
+if [ $# -gt 1 ] ; then
+  if [ $2 -eq "1" ] ; then  # if user says "spinup.sh N 2" then use:
+    echo "# grid: coarse"
+      Mx=88
+      My=169
+      SKIP=50
+      GS=200
+  fi
+  if [ $2 -eq "2" ] ; then  # if user says "spinup.sh N 3" then use:
+    echo "# grid: fine"
+      Mx=176
+      My=339
+      SKIP=100
+      GS=100
+  fi
+  if [ $2 -eq "3" ] ; then  # if user says "spinup.sh N 4" then use:
+    echo "# grid: finest"
+      Mx=351
+      My=679
+      SKIP=500
+      GS=50
+  fi
+fi
 
 
 # preprocess.sh generates pism_*.nc files; run it first
@@ -84,8 +108,10 @@ fi
 
 INNAME=$PISM_DATANAME
 CONFIG=aletsch_config.nc
-OSIZE="medium"
+OSIZE="big"
 
+Mz=50
+GRID="-Mx $Mx -My $My -Mz $Mz -Lz 1000"
 
 PISM="${PISM_PREFIX}${PISM_EXEC} -title \"$TITLE\" -config_override aletsch_config.nc"
 PHYSICS="-no_energy -ssa_sliding  -ssa_flow_law isothermal_glen -sia_flow_law isothermal_glen -ssa_sliding -topg_to_phi 5,45,2395,2400 -pseudo_plastic"
@@ -97,25 +123,22 @@ echo "$SCRIPTNAME                coupler = '$COUPLER'"
 echo "$SCRIPTNAME                   grid = '$GRID' (= $GS m)"
 echo ""
 
-OUTNAME=aletsch_${GS}m_ssa.nc
+OUTNAME=aletsch_${GS}m_ssa_short.nc
 EXNAME=ex_$OUTNAME
 TSNAME=ts_$OUTNAME
-EXVARS="usurf,grounded_basal_flux_cumulative,bwat,nonneg_flux_cumulative,h_x,h_y,bmelt,strain_rates,csurf,lon,diffusivity,taud_mag,ocean_kill_flux_cumulative,climatic_mass_balance_cumulative,bwp,hardav,topg,velbar,tauc,lat,taud,bfrict,mask,Href,thk,temppabase,cbase,diffusivity_staggered,IcebergMask,tempicethk_basal,dHdt,flux_divergence"
+EXVARS="usurf,h_x,h_y,bmelt,strain_rates,csurf,lon,diffusivity,taud_mag,topg,velbar,tauc,lat,taud,thk,cbase,diffusivity_staggered,dHdt,flux_divergence"
 
 echo""
-cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME $SKIP $GRID $PHYSICS $COUPLER -o_size $OSIZE -extra_times monthly -extra_vars $EXVARS -extra_file $EXNAME -ts_times daily -ts_file $TSNAME -o $OUTNAME -time_file time_1880-2000.nc -calendar gregorian -o_order zyx -o_format $OFORMAT"
+cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME $SKIP $GRID $PHYSICS $COUPLER -o_size $OSIZE -extra_times daily -extra_vars $EXVARS -extra_file $EXNAME -ts_times daily -ts_file $TSNAME -o $OUTNAME -time_file time_1880.nc -calendar gregorian -o_order zyx -o_format $OFORMAT"
 $PISM_DO $cmd
 
-exit
 
 STARTNAME=$OUTNAME
-GRID='-Mx 176 -My 339 -Mz 50 -Lz 1000'
-GS=100
 OUTNAME=aletsch_${GS}m_ssa.nc
 EXNAME=ex_$OUTNAME
 TSNAME=ts_$OUTNAME
 EXVARS="usurf,grounded_basal_flux_cumulative,bwat,nonneg_flux_cumulative,h_x,h_y,bmelt,strain_rates,csurf,lon,diffusivity,taud_mag,ocean_kill_flux_cumulative,climatic_mass_balance_cumulative,bwp,hardav,topg,velbar,tauc,lat,taud,bfrict,mask,Href,thk,temppabase,cbase,diffusivity_staggered,IcebergMask,tempicethk_basal"
 
 echo""
-cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME -regrid_file $STARTNAME -regrid_vars thk $SKIP $GRID $PHYSICS $COUPLER -o_size $OSIZE -extra_times monthly -extra_vars $EXVARS -extra_file $EXNAME -ts_times daily -ts_file $TSNAME -o $OUTNAME -y 5 -o_format $OFORMAT"
+cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME -regrid_file $STARTNAME -regrid_vars thk $SKIP $GRID $PHYSICS $COUPLER -o_size $OSIZE -extra_times monthly -extra_vars $EXVARS -extra_file $EXNAME -ts_times daily -ts_file $TSNAME -o $OUTNAME -time_file time_1880-2000.nc -calendar gregorian -o_order zyx -o_format $OFORMAT"
 $PISM_DO $cmd

@@ -163,7 +163,7 @@ def create_outfile(f, outname):
     cmb_var = nc.createVariable('climatic_mass_balance', 'f',
                                    dimensions= (time_dim, y_dim, x_dim),
         fill_value=fill_value)
-    cmb_var.units = 'mm day-1'    
+    cmb_var.units = 'm year-1'    
     cmb_var.long_name = "ice-equivalent surface mass balance (accumulation/ablation) rate" ;
     cmb_var.standard_name = "land_ice_surface_specific_mass_balance" ;
     cmb_var.cell_methods = 'time: sum'
@@ -197,9 +197,9 @@ for year in range(start_year, end_year):
     f = gdal.Open(filename)
     if (counter == 0):
         nc = create_outfile(f, out_file)
-    # Read data, convert from cm water equivalent per year to mm/day ice equivalent
+    # Read data, convert from cm water equivalent per year to m/year ice equivalent
     data = np.ma.masked_where(f.ReadAsArray()==ndv, f.ReadAsArray())
-    nc.variables['climatic_mass_balance'][k,:] = np.flipud(data / 10 * (1000./910.) / days_per_year[k])
+    nc.variables['climatic_mass_balance'][k,:] = np.flipud(data / 100 * (1000./910.))
     nc.variables['ice_surface_temp'][k,:] = 0.
     counter += 1
     k += 1

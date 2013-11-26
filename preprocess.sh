@@ -34,12 +34,7 @@ fi
 
 # we use the missing value as a very negative mass balance outside the glacier to remove excess ice
 ncks -A -v x,y pism_Aletsch_1880.nc ${cmb_file_out}
-
-exit
-
 ncatted -a _FillValue,,d,, -a missing_value,,d,, ${cmb_file_out}
-# PISM stalls with compressed netCDF4, but why?
-ncks -O -3 ${cmb_file_out} ${cmb_file_out}
 # config file
 CDLCONFIG=aletsch_config.cdl
 PCONFIG=aletsch_config.nc
