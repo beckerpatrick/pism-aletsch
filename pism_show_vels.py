@@ -34,7 +34,7 @@ fig = plt.figure()
 ax = fig.add_subplot(111)
 p_mag = ax.pcolormesh(x, y, v_mag, norm=norm)
 s = 3
-#p_stream = ax.streamplot(x, y, vx, vy, color='w', density=[s, s*My/Mx])
+p_stream = ax.streamplot(x, y, vx, vy, color='w', density=[s, s*My/Mx])
 cbar = plt.colorbar(p_mag)
 cbar.set_label(colorbar_label)
 cbar.solids.set_edgecolor("face")

@@ -104,17 +104,17 @@ fi
 if [ -n "${PISM_PHI_LOW:+1}" ] ; then  # check if env var is already set
   echo "$SCRIPTNAME                       PISM_PHI_LOW = $PISM_PHI_LOW  (already set)"
 else
-  PISM_PHI_LOW=2
+  PISM_PHI_LOW=5
   echo "$SCRIPTNAME                       PISM_PHI_LOW = $PISM_PHI_LOW"
 fi
 
-# set PISM_PHI_HIGH if using different phi, for example:
-#  $ export PISM_PHI_HIGH=45
-if [ -n "${PISM_PHI_HIGH:+1}" ] ; then  # check if env var is already set
-  echo "$SCRIPTNAME                       PISM_PHI_HIGH = $PISM_PHI_HIGH  (already set)"
+# set PISM_U_THRESHOLD if using different phi, for example:
+#  $ export PISM_U_THRESHOLD=45
+if [ -n "${PISM_U_THRESHOLD:+1}" ] ; then  # check if env var is already set
+  echo "$SCRIPTNAME                       PISM_U_THRESHOLD = $PISM_U_THRESHOLD  (already set)"
 else
-  PISM_PHI_HIGH=35
-  echo "$SCRIPTNAME                       PISM_PHI_HIGH = $PISM_PHI_HIGH"
+  PISM_U_THRESHOLD=50
+  echo "$SCRIPTNAME                       PISM_U_THRESHOLD = $PISM_U_THRESHOLD"
 fi
 
 # set PISM_PHI_RATEFACTOR if using different phi, for example:
@@ -122,7 +122,7 @@ fi
 if [ -n "${PISM_PHI_RATEFACTOR:+1}" ] ; then  # check if env var is already set
   echo "$SCRIPTNAME                       PISM_PHI_RATEFACTOR = $PISM_PHI_RATEFACTOR  (already set)"
 else
-  PISM_PHI_RATEFACTOR="1e-24"
+  PISM_PHI_RATEFACTOR="2e-24"
   echo "$SCRIPTNAME                       PISM_PHI_RATEFACTOR = $PISM_PHI_RATEFACTOR"
 fi
 
@@ -130,7 +130,7 @@ fi
 PISM="${PISM_PREFIX}${PISM_EXEC} -config_override $PISM_CONFIG"
 
 PHI_LOW=$PISM_PHI_LOW
-PHI_HIGH=$PISM_PHI_HIGH
+U_THRESHOLD=$PISM_U_THRESHOLD
 RATE_FACTOR=$PISM_RATEFACTOR
 
 Mz=50
@@ -138,7 +138,7 @@ Mz=50
 
 GRID="-Mx $Mx -My $My -Mz $Mz -Lz 1000"
 COUPLER="-surface given -surface_given_file mb2008.nc"
-PHYSICS="-ssa_sliding -pseudo_plastic -pseudo_plastic_q 0.333333 -pseudo_plastic_uthreshold 50 -topg_to_phi $PHI_LOW,$PHI_HIGH,2399,2400 -sia_flow_law isothermal_glen -ssa_flow_law isothermal_glen -no_energy"
+PHYSICS="-ssa_sliding -pseudo_plastic -pseudo_plastic_q 0.333333 -pseudo_plastic_uthreshold $U_THRESHOLD -topg_to_phi $PHI_LOW,45,2399,2400 -sia_flow_law isothermal_glen -ssa_flow_law isothermal_glen -no_energy"
 INNAME=pism_Aletsch_1880.nc
 
 echo "$SCRIPTNAME             executable = '$PISM'"
@@ -149,13 +149,13 @@ echo ""
 
 EXVARS="usurf,h_x,h_y,csurf,lon,diffusivity,taud_mag,hardav,topg,velbar,tauc,lat,taud,mask,thk,cbase,diffusivity_staggered,dHdt,flux_divergence"
 
-RUNLENGTH=0.25
-OUTNAME=a${GS}m_low_${PHI_LOW}_high_${PHI_HIGH}-${RATE_FACTOR}_${RUNLENGTH}a_dailyrun.nc
+RUNLENGTH=100
+OUTNAME=a${GS}m_low_${PHI_LOW}_high_${PHI_HIGH}-${RATE_FACTOR}_${RUNLENGTH}a.nc
 OUTNAME_EXTRA=ex_$OUTNAME
 START=0
 END=$RUNLENGTH
-EXSTEP=daily
+EXSTEP=yearly
 
 echo""
-cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME -skip -skip_max $SKIP $GRID $COUPLER $PHYSICS -extra_file $OUTNAME_EXTRA -extra_times 0:$EXSTEP:$END -extra_vars $EXVARS -o_order zyx  -o $OUTNAME -o_size big -ys $START -ye $END 2>&1 | tee job.\${PBS_JOBID}"
+cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME -skip -skip_max $SKIP $GRID $COUPLER $PHYSICS -extra_file $OUTNAME_EXTRA -extra_times $EXSTEP -extra_vars $EXVARS -o_order zyx  -o $OUTNAME -o_size big -ys $START -ye $END 2>&1 | tee job.\${PBS_JOBID}"
 $PISM_DO $cmd

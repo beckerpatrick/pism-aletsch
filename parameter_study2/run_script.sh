@@ -53,15 +53,15 @@ MPIQUEUELINE="#PBS -q standard_4"
   MPIOUTLINE="#PBS -j oe"
 
 # params in nested for loop:
-#   ice_softness      	2e-25   1e-24   5e-24
-#   phi_low  		2       5       10
-#   u_theshold          25      50      75
+#   ice_softness      	1.75e-24 2.0e-24 2.25e-24
+#   phi_low  		2        5       10
+#   u_theshold          25       50      75
 
 CONFIG=aletsch_config.nc
 
 
 
-for ice_softnessVAL in 2e-25 1e-24 5e-24
+for ice_softnessVAL in 1.75e-24 2.0e-24 2.25e-24
 do
 
   for phi_lowVAL in 2 5 10
@@ -72,7 +72,7 @@ do
 
       SCRIPT="do_${ice_softnessVAL}_${phi_lowVAL}_${phi_highVAL}.sh"
       rm -f $SCRIPT
-      EXPERIMENT=e_${ice_softnessVAL}_phi_low_${phi_lowVAL}_phi_high_${phi_highVAL}
+      EXPERIMENT=e_${ice_softnessVAL}_phi_low_${phi_lowVAL}_u_threshold_${u_thesholdVAL}
       CONFIG_FILE=${EXPERIMENT}_config.nc
       ncks -O $CONFIG $CONFIG_FILE
 
@@ -96,7 +96,7 @@ do
       export PISM_TITLE="Aletsch Flow Study"
 
       export PISM_PHI_LOW=$phi_lowVAL
-      export PISM_PHI_HIGH=$phi_highVAL
+      export PISM_U_THRESHOLD=$u_thesholdVAL
       export PISM_RATEFACTOR=$ice_softnessVAL
       export PISM_CONFIG=$CONFIG_FILE
 
