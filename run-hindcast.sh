@@ -2,7 +2,7 @@
 
 set -e
 
-SCRIPTNAME="#run_variation.sh"
+SCRIPTNAME="#run-hindcast.sh"
 
 NN=4  # default number of processors
 if [ $# -gt 0 ] ; then  # if user says "psearise.sh 8" then NN = 8
@@ -17,28 +17,21 @@ My=86
 SKIP=10
 GS=400
 if [ $# -gt 1 ] ; then
-  if [ $2 -eq "1" ] ; then  # if user says "spinup.sh N 1" then use:
-    echo "# grid: coarsest"
-      Mx=45
-      My=86
-      SKIP=10
-      GS=400
-  fi
-  if [ $2 -eq "2" ] ; then  # if user says "spinup.sh N 2" then use:
+  if [ $2 -eq "1" ] ; then
     echo "# grid: coarse"
       Mx=88
       My=169
       SKIP=50
       GS=200
   fi
-  if [ $2 -eq "3" ] ; then  # if user says "spinup.sh N 3" then use:
+  if [ $2 -eq "2" ] ; then
     echo "# grid: fine"
       Mx=176
       My=339
       SKIP=100
       GS=100
   fi
-  if [ $2 -eq "4" ] ; then  # if user says "spinup.sh N 4" then use:
+  if [ $2 -eq "3" ] ; then
     echo "# grid: finest"
       Mx=351
       My=679
@@ -117,13 +110,13 @@ else
   echo "$SCRIPTNAME                       PISM_U_THRESHOLD = $PISM_U_THRESHOLD"
 fi
 
-# set PISM_PHI_RATEFACTOR if using different phi, for example:
-#  $ export PISM_PHI_RATEFACTOR=45
-if [ -n "${PISM_PHI_RATEFACTOR:+1}" ] ; then  # check if env var is already set
-  echo "$SCRIPTNAME                       PISM_PHI_RATEFACTOR = $PISM_PHI_RATEFACTOR  (already set)"
+# set PISM_RATEFACTOR if using different phi, for example:
+#  $ export PISM_RATEFACTOR=2e-24
+if [ -n "${PISM_RATEFACTOR:+1}" ] ; then  # check if env var is already set
+  echo "$SCRIPTNAME                       PISM_RATEFACTOR = $PISM_RATEFACTOR  (already set)"
 else
-  PISM_PHI_RATEFACTOR="2e-24"
-  echo "$SCRIPTNAME                       PISM_PHI_RATEFACTOR = $PISM_PHI_RATEFACTOR"
+  PISM_RATEFACTOR="2e-24"
+  echo "$SCRIPTNAME                       PISM_RATEFACTOR = $PISM_RATEFACTOR"
 fi
 
 # cat stuff together
@@ -137,7 +130,7 @@ Mz=50
 
 
 GRID="-Mx $Mx -My $My -Mz $Mz -Lz 1000"
-COUPLER="-surface given -surface_given_file mb2008.nc"
+COUPLER="-surface given -surface_given_file aletsch_cmb_1865-2008.nc"
 PHYSICS="-ssa_sliding -pseudo_plastic -pseudo_plastic_q 0.333333 -pseudo_plastic_uthreshold $U_THRESHOLD -topg_to_phi $PHI_LOW,45,2399,2400 -sia_flow_law isothermal_glen -ssa_flow_law isothermal_glen -no_energy"
 INNAME=pism_Aletsch_1880.nc
 
@@ -147,15 +140,13 @@ echo "$SCRIPTNAME                coupler = '$COUPLER'"
 echo "$SCRIPTNAME                   grid = '$GRID' (= $GS m)"
 echo ""
 
-EXVARS="usurf,h_x,h_y,csurf,lon,diffusivity,taud_mag,hardav,topg,velbar,tauc,lat,taud,mask,thk,cbase,diffusivity_staggered,dHdt,flux_divergence"
+EXVARS="usurf,h_x,h_y,csurf,lon,diffusivity,taud_mag,hardav,topg,velbar,tauc,lat,taud,mask,thk,cbase,dHdt,flux_divergence,velbase,velsurf"
 
-RUNLENGTH=100
-OUTNAME=a${GS}m_low_${PHI_LOW}_high_${PHI_HIGH}-${RATE_FACTOR}_${RUNLENGTH}a.nc
+OUTNAME=a${GS}m_low_${PHI_LOW}_high_${U_THRESHOLD}_${RATE_FACTOR}_1880-2008.nc
 OUTNAME_EXTRA=ex_$OUTNAME
-START=0
-END=$RUNLENGTH
-EXSTEP=yearly
+EXSTEP=monthly
+OUTNAME_TS=ts_$OUTNAME
 
 echo""
-cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME -skip -skip_max $SKIP $GRID $COUPLER $PHYSICS -extra_file $OUTNAME_EXTRA -extra_times $EXSTEP -extra_vars $EXVARS -o_order zyx  -o $OUTNAME -o_size big -ys $START -ye $END 2>&1 | tee job.\${PBS_JOBID}"
+cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME -skip -skip_max $SKIP $GRID $COUPLER $PHYSICS -ts_file $OUTNAME_TS -ts_times daily -extra_file $OUTNAME_EXTRA -extra_times $EXSTEP -extra_vars $EXVARS -o_order zyx  -o $OUTNAME -o_size big -time_file time_1880-2008.nc -calendar gregorian"
 $PISM_DO $cmd

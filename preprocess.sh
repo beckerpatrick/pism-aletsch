@@ -32,6 +32,8 @@ else
     cdo remapcon,pism_Aletsch_1880.nc ${cmb_file_orig} ${cmb_file_out}
 fi
 
+create_timeline.py -a 1880-1-1 -e 2009-1-1 -d 1865-1-1 -p yearly time_1880-2008.nc
+
 # we use the missing value as a very negative mass balance outside the glacier to remove excess ice
 ncks -A -v x,y pism_Aletsch_1880.nc ${cmb_file_out}
 ncatted -a _FillValue,,d,, -a missing_value,,d,, ${cmb_file_out}
