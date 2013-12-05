@@ -148,5 +148,5 @@ EXSTEP=monthly
 OUTNAME_TS=ts_$OUTNAME
 
 echo""
-cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME -skip -skip_max $SKIP $GRID $COUPLER $PHYSICS -ts_file $OUTNAME_TS -ts_times daily -extra_file $OUTNAME_EXTRA -extra_times $EXSTEP -extra_vars $EXVARS -o_order zyx  -o $OUTNAME -o_size big -time_file time_1880-2008.nc -calendar gregorian"
+cmd="$PISM_MPIDO $NN $PISM -boot_file $INNAME -skip -skip_max $SKIP $GRID $COUPLER $PHYSICS -ts_file $OUTNAME_TS -ts_times daily -extra_file $OUTNAME_EXTRA -extra_times $EXSTEP -extra_vars $EXVARS -o_order zyx  -o $OUTNAME -o_size big -time_file time_1880-2008.nc -calendar gregorian  2>&1 | tee job.\${PBS_JOBID}"
 $PISM_DO $cmd

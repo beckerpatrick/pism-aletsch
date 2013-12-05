@@ -102,7 +102,7 @@ do
 
       # Run (all) the experiments
       
-      PISM_DO=echo ./run-hindcast.sh $NN $2 2>&1 | tee job.\${PBS_JOBID} >> $SCRIPT
+      PISM_DO=echo ./run-hindcast.sh $NN $2 >> $SCRIPT
 
       echo "($SPAWNSCRIPT)  $SCRIPT written"
       
