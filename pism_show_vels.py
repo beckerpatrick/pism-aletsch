@@ -20,10 +20,10 @@ y = nc.variables['y'][:]
 Mx = len(x)
 My = len(y)
 
-vx = np.squeeze(nc.variables['uvelsurf'][:])
-vy = np.squeeze(nc.variables['vvelsurf'][:])
-v_mag = np.sqrt(vx**2 + vy**2)
-
+#vx = np.squeeze(nc.variables['uvelsurf'][-1,::])
+#vy = np.squeeze(nc.variables['vvelsurf'][-1,::])
+#v_mag = np.sqrt(vx**2 + vy**2)
+v_mag = np.squeeze(nc.variables['csurf'][-1,::])
 
 colorbar_label = 'm a$^{-1}$'
 vmin = 0.001
