@@ -67,12 +67,12 @@ do
   for phi_lowVAL in 2 5 10
   do
 
-    for u_thesholdVAL in 25 50 75
+    for u_thresholdVAL in 25 50 75
     do
 
       SCRIPT="do_${ice_softnessVAL}_${phi_lowVAL}_${u_thresholdVAL}.sh"
       rm -f $SCRIPT
-      EXPERIMENT=e_${ice_softnessVAL}_phi_low_${phi_lowVAL}_u_threshold_${u_thesholdVAL}
+      EXPERIMENT=e_${ice_softnessVAL}_phi_low_${phi_lowVAL}_u_threshold_${u_thresholdVAL}
       CONFIG_FILE=${EXPERIMENT}_config.nc
       ncks -O $CONFIG $CONFIG_FILE
 
@@ -96,7 +96,7 @@ do
       export PISM_TITLE="Aletsch Flow Study"
 
       export PISM_PHI_LOW=$phi_lowVAL
-      export PISM_U_THRESHOLD=$u_thesholdVAL
+      export PISM_U_THRESHOLD=$u_thresholdVAL
       export PISM_RATEFACTOR=$ice_softnessVAL
       export PISM_CONFIG=$CONFIG_FILE
 
