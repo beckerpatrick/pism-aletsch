@@ -19,7 +19,7 @@
 # initially generates 3x3x3=27 scripts
 
 set -e # exit on error
-SPAWNSCRIPT=run_script.sh
+SPAWNSCRIPT=run-hindcast.sh
 
 
 
@@ -53,9 +53,9 @@ MPIQUEUELINE="#PBS -q standard_4"
   MPIOUTLINE="#PBS -j oe"
 
 # params in nested for loop:
-#   ice_softness      	2e-25   1e-24   5e-24
-#   phi_low  		2       5       10
-#   u_theshold          25      50      75
+#   ice_softness      	1.75e-24 2.0e-24 2.25e-24
+#   phi_low  		2        5       10
+#   u_theshold          25       50      75
 
 CONFIG=aletsch_config.nc
 
@@ -70,7 +70,7 @@ do
     for u_thesholdVAL in 25 50 75
     do
 
-      SCRIPT="do_${ice_softnessVAL}_${phi_lowVAL}_${phi_highVAL}.sh"
+      SCRIPT="do_${ice_softnessVAL}_${phi_lowVAL}_${u_thresholdVAL}.sh"
       rm -f $SCRIPT
       EXPERIMENT=e_${ice_softnessVAL}_phi_low_${phi_lowVAL}_u_threshold_${u_thesholdVAL}
       CONFIG_FILE=${EXPERIMENT}_config.nc
@@ -100,9 +100,9 @@ do
       export PISM_RATEFACTOR=$ice_softnessVAL
       export PISM_CONFIG=$CONFIG_FILE
 
-# Run (all) the experiments
+      # Run (all) the experiments
       
-      ./run_variation.sh $NN $2 >> $SCRIPT
+      PISM_DO=echo ./run-hindcast.sh $NN $2 2>&1 | tee job.\${PBS_JOBID} >> $SCRIPT
 
       echo "($SPAWNSCRIPT)  $SCRIPT written"
       
