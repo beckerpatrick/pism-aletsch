@@ -19,6 +19,7 @@ GS=400
 if [ $# -gt 1 ] ; then
   if [ $2 -eq "1" ] ; then
     echo "# grid: coarse"
+    # approx. 200m
       Mx=88
       My=169
       SKIP=50
@@ -26,13 +27,15 @@ if [ $# -gt 1 ] ; then
   fi
   if [ $2 -eq "2" ] ; then
     echo "# grid: fine"
+    # 100m
       Mx=176
-      My=339
+      My=340
       SKIP=100
       GS=100
   fi
   if [ $2 -eq "3" ] ; then
     echo "# grid: finest"
+    # 50m (native)
       Mx=351
       My=679
       SKIP=500
