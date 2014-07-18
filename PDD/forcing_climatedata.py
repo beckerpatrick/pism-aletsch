@@ -67,8 +67,6 @@ prec_data = precipitation_conversion(prec_data)
 
 # Aufbau NetCDF-Datei
 nc = NC(outname, 'w', format='NETCDF3_CLASSIC')	
-fill_value = -9999
-
 
 # create a new dimension for bounds only if it does not yet exist
 time_dim = "time"
