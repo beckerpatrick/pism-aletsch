@@ -18,11 +18,10 @@ from netcdftime import utime
 
 
 
-start_date = parse('1865-1-1')
-#~ start_date = parse("18650101T000000")
+start_date = parse('01.01.1865')
 print start_date
-end_date = parse('2009-1-1')
-ref_date = parse('1864-1-1')
+end_date = parse('01.01.2009')
+ref_date = parse('01.01.1864')
 ref_unit = 'days'
 prule = rrule.YEARLY
 
