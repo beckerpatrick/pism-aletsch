@@ -9,6 +9,10 @@ from dateutil.parser import parse
 from datetime import datetime
 import time
 
+
+def precipitation_conversion(prec_data):
+    return prec_data * 0.365
+
 try:
     import netCDF4 as netCDF
 except:
@@ -36,45 +40,35 @@ time_units = ("%s since %s" % (ref_unit, ref_date))
 time_calendar = "standard"
 cdftime = utime(time_units, time_calendar)
 
-
+# macht aus ref_date ein datetime-Objekt
 refdateAsList = time_units.split(' ')[2].split('-')
 refdate = datetime(int(refdateAsList[0]), int(refdateAsList[1]), int(refdateAsList[2]))
 
-# create list with dates from start_date until end_date with
-# periodicity prule.
+# erzeugt Liste von Datumseintraegen ab start_date bis end_date zu gegebener Periodizitaet prule
 bnds_datelist = list(rrule.rrule(prule, dtstart=start_date, until=end_date))
 
-# naechste Schritte
-# timebounds: muessen angeben, von wann bis wann die Zeitspanne ist, fuer die die Werte gelten
 
 print('running forcing_climatdata.py')
 print ('process ' + inname)
 
-
-
-data  = np.loadtxt(inname, skiprows=2)
-
+# Klimadaten aus Textdatei einlesen
+climatedata  = np.loadtxt(inname, skiprows=2)
 year_row = 0
 day_row = 1
 temp_row = 3
 prec_row = 4
-anzahlTage = data.shape[0]
-print ('TAGE' + str(anzahlTage))
+anzahlTage = climatedata.shape[0]
 
-netcdf_temp = np.zeros((anzahlTage, 1))
-netcdf_prec = np.zeros((anzahlTage, 1))
-
-for day in range(0, anzahlTage):
-    netcdf_temp[day] = data[day][temp_row]
-    netcdf_prec[day] = data[day][prec_row]
+# Klimadaten aufbereiten
+temp_data = climatedata[:,temp_row]
+prec_data = climatedata[:,prec_row]
+prec_data = precipitation_conversion(prec_data)
 
 
-#~ PREC KONVERSION from mm d-1 in kg m-2 year-1
-for day in range(0, anzahlTage):
-    data[day][prec_row] = data[day][prec_row] * 0.365
-
-fill_value = -9999
+# Aufbau NetCDF-Datei
 nc = NC(outname, 'w', format='NETCDF3_CLASSIC')	
+fill_value = -9999
+
 
 # create a new dimension for bounds only if it does not yet exist
 time_dim = "time"
@@ -180,8 +174,8 @@ end_day = anzahlTage
 
 for day in range(start_day,100): #ACHTUNG!!! ZUM TEST nur 10 Tage statt 52000 (end_day)
 #~ for day in range(start_day,end_day):
-    nc.variables['air_temp'][day,:] = data[day][temp_row]
-    nc.variables['precipitation'][day,:] = data[day][prec_row]
+    nc.variables['air_temp'][day,:] = temp_data[day]
+    nc.variables['precipitation'][day,:] =prec_data[day]
     print(str(day), 'von ', end_day)
 
 # Feld mit surface elevation der Wetterstation
@@ -190,10 +184,6 @@ nc.variables['surface_elevation'][:] = hoeheDerWetterstation
 #~ # Temperatur- und Niederschlagsgradient setzen
 #~ nc.variables['temp_lapse_rate'][:] = tempGradient
 
-
-#~ 
-#~ print (netcdf_temp)
-#~ print (netcdf_prec)
 
 nc.close()
 
