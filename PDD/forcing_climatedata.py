@@ -17,24 +17,28 @@ NC = netCDF.Dataset
 from netcdftime import utime
 
 
-
+# Parameter festlegen
 start_date = parse('01.01.1865')
-print start_date
 end_date = parse('01.01.2009')
 ref_date = parse('01.01.1864')
 ref_unit = 'days'
 prule = rrule.YEARLY
 
+outname = 'climateforcing.nc'
+
+# Klimadaten erfassen
+hoeheDerWetterstation = 2766 # in Meter
+tempGradient = -0.006
+niederschlagGradient = 0.0003 # sollte 3% pro 100m sein
+inname = "alet_bern_mc_prismloc_d.dat"
 
 time_units = ("%s since %s" % (ref_unit, ref_date))
 time_calendar = "standard"
-
 cdftime = utime(time_units, time_calendar)
 
 
-# reference date from command-line argument
-r = time_units.split(' ')[2].split('-')
-refdate = datetime(int(r[0]), int(r[1]), int(r[2]))
+refdateAsList = time_units.split(' ')[2].split('-')
+refdate = datetime(int(refdateAsList[0]), int(refdateAsList[1]), int(refdateAsList[2]))
 
 # create list with dates from start_date until end_date with
 # periodicity prule.
@@ -44,13 +48,9 @@ bnds_datelist = list(rrule.rrule(prule, dtstart=start_date, until=end_date))
 # timebounds: muessen angeben, von wann bis wann die Zeitspanne ist, fuer die die Werte gelten
 
 print('running forcing_climatdata.py')
-inname = "alet_bern_mc_prismloc_d.dat"
 print ('process ' + inname)
 
-outname = 'test.nc'
-hoeheDerWetterstation = 2766 # in Meter
-tempGradient = -0.006
-niederschlagGradient = 0.0003 # sollte 3% pro 100m sein
+
 
 data  = np.loadtxt(inname, skiprows=2)
 
