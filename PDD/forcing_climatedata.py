@@ -27,6 +27,7 @@ end_date = parse('01.01.2009')
 ref_date = parse('01.01.1864')
 ref_unit = 'days'
 prule = rrule.YEARLY
+netcdfFlavor = 'NETCDF3_CLASSIC'
 
 outname = 'climateforcing.nc'
 
@@ -66,7 +67,7 @@ prec_data = precipitation_conversion(prec_data)
 
 
 # Aufbau NetCDF-Datei
-nc = NC(outname, 'w', format='NETCDF3_CLASSIC')	
+nc = NC(outname, 'w', format=netcdfFlavor)
 
 # create a new dimension for bounds only if it does not yet exist
 time_dim = "time"
@@ -170,7 +171,7 @@ prec_var.comment = '''no comment'''
 start_day = 0
 end_day = anzahlTage
 
-for day in range(start_day,100): #ACHTUNG!!! ZUM TEST nur 10 Tage statt 52000 (end_day)
+for day in range(start_day,145): #ACHTUNG!!! ZUM TEST nur 10 Tage statt 52000 (end_day)
 #~ for day in range(start_day,end_day):
     nc.variables['air_temp'][day,:] = temp_data[day]
     nc.variables['precipitation'][day,:] =prec_data[day]
