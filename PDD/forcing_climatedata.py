@@ -37,17 +37,6 @@ tempGradient = -0.006
 niederschlagGradient = 0.0003 # sollte 3% pro 100m sein
 inname = "alet_bern_mc_prismloc_d.dat"
 
-time_units = ("%s since %s" % (ref_unit, ref_date))
-time_calendar = "standard"
-cdftime = utime(time_units, time_calendar)
-
-# macht aus ref_date ein datetime-Objekt
-refdateAsList = time_units.split(' ')[2].split('-')
-refdate = datetime(int(refdateAsList[0]), int(refdateAsList[1]), int(refdateAsList[2]))
-
-# erzeugt Liste von Datumseintraegen ab start_date bis end_date zu gegebener Periodizitaet prule
-bnds_datelist = list(rrule.rrule(prule, dtstart=start_date, until=end_date))
-
 
 print('running forcing_climatdata.py')
 print ('process ' + inname)
@@ -105,6 +94,19 @@ y_var.long_name = "northing"
 y_var.standard_name = "projection_y_coordinate"
 y_var[:] = northing
 
+
+
+
+time_units = ("%s since %s" % (ref_unit, ref_date))
+time_calendar = "standard"
+cdftime = utime(time_units, time_calendar)
+
+# macht aus ref_date ein datetime-Objekt
+refdateAsList = time_units.split(' ')[2].split('-')
+refdate = datetime(int(refdateAsList[0]), int(refdateAsList[1]), int(refdateAsList[2]))
+
+# erzeugt Liste von Datumseintraegen ab start_date bis end_date zu gegebener Periodizitaet prule
+bnds_datelist = list(rrule.rrule(prule, dtstart=start_date, until=end_date))
 
 # variable names consistent with PISM
 time_var_name = "time"
@@ -179,11 +181,6 @@ for day in range(start_day,145): #ACHTUNG!!! ZUM TEST nur 10 Tage statt 52000 (e
 
 # Feld mit surface elevation der Wetterstation
 nc.variables['surface_elevation'][:] = hoeheDerWetterstation
-
-#~ # Temperatur- und Niederschlagsgradient setzen
-#~ nc.variables['temp_lapse_rate'][:] = tempGradient
-
-
 nc.close()
 
 
