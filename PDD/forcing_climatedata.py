@@ -173,7 +173,7 @@ prec_var.comment = '''no comment'''
 start_day = 0
 end_day = anzahlTage
 
-# for day in range(start_day,3): #ACHTUNG!!! ZUM TEST nur 10 Tage statt 52000 (end_day)
+#for day in range(start_day,100): #ACHTUNG!!! ZUM TEST nur 10 Tage statt 52000 (end_day)
 for day in range(start_day,end_day):
     print("processing record {} of {}".format(day, end_day))
     nc.variables['air_temp'][day,:] = temp_data[day]
@@ -183,4 +183,4 @@ for day in range(start_day,end_day):
 nc.variables['surface_elevation'][:] = hoeheDerWetterstation
 nc.close()
 
-
+print ('processing ' + inname + ' finished.')
