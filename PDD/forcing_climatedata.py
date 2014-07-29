@@ -27,7 +27,7 @@ end_date = parse('01.01.2009')
 ref_date = parse('01.01.1864')
 ref_unit = 'days'
 prule = rrule.DAILY
-netcdfFlavor = 'NETCDF4'
+netcdfFlavor = 'NETCDF3_CLASSIC'
 
 outname = 'climateforcing.nc'
 
@@ -143,27 +143,27 @@ time_bnds_var[:,1] = bnds_interval_since_refdate[1::]
 # check ob NC funktioniert
 print nc.data_model
 
-temp_var = nc.createVariable('air_temp', 'f',dimensions=(time_dim, y_dim, x_dim),fill_value=fill_value,zlib=True)
+temp_var = nc.createVariable('air_temp', 'f',dimensions=(time_dim, y_dim, x_dim),fill_value=fill_value)
 temp_var.long_name = 'air temp 2m above the surface'
 temp_var.units = 'degC'
 temp_var.comment = '''test'''
 
-prec_var = nc.createVariable('precipitation', 'f',dimensions=(time_dim, y_dim, x_dim),fill_value=fill_value,zlib=True)
+prec_var = nc.createVariable('precipitation', 'f',dimensions=(time_dim, y_dim, x_dim),fill_value=fill_value)
 prec_var.long_name = 'precipitation'
 prec_var.units = 'kg m-2 year-1'
 prec_var.comment = '''test'''
 
-prec_var = nc.createVariable('surface_elevation', 'f',dimensions=(y_dim, x_dim),fill_value=fill_value,zlib=True)
+prec_var = nc.createVariable('surface_elevation', 'f',dimensions=(y_dim, x_dim),fill_value=fill_value)
 prec_var.long_name = 'surface_elevation of the wheater station'
 prec_var.units = 'm'
 prec_var.comment = '''elevation field whith surface elevation of the wheater station in every grid cell'''
 
-prec_var = nc.createVariable('temp_lapse_rate', 'f',dimensions=(),fill_value=tempGradient,zlib=True)
+prec_var = nc.createVariable('temp_lapse_rate', 'f',dimensions=(),fill_value=tempGradient)
 prec_var.long_name = 'temperature lapse rate'
 prec_var.units = 'degC m-1'
 prec_var.comment = '''no comment'''
 
-prec_var = nc.createVariable('precip_lapse_rate', 'f',dimensions=(),fill_value=niederschlagGradient,zlib=True)
+prec_var = nc.createVariable('precip_lapse_rate', 'f',dimensions=(),fill_value=niederschlagGradient)
 prec_var.long_name = 'precipitation lapse rate'
 prec_var.units = 'm-1'
 prec_var.comment = '''no comment'''
@@ -173,8 +173,8 @@ prec_var.comment = '''no comment'''
 start_day = 0
 end_day = anzahlTage
 
-#for day in range(start_day,100): #ACHTUNG!!! ZUM TEST nur 10 Tage statt 52000 (end_day)
-for day in range(start_day,end_day):
+for day in range(start_day,10): #ACHTUNG!!! ZUM TEST nur 10 Tage statt 52000 (end_day)
+#for day in range(start_day,end_day):
     print("processing record {} of {}".format(day, end_day))
     nc.variables['air_temp'][day,:] = temp_data[day]
     nc.variables['precipitation'][day,:] =prec_data[day]
