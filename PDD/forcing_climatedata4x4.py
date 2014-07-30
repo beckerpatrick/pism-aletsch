@@ -29,7 +29,7 @@ ref_unit = 'days'
 prule = rrule.DAILY
 netcdfFlavor = 'NETCDF3_CLASSIC'
 
-outname = '4x4climateforcing.nc'
+outname = 'climateforcing_small.nc'
 
 zeitspanne =(end_date.year - start_date.year)*365 + end_date.day - start_date.day
 print('zeitspanne ' + str(zeitspanne))
