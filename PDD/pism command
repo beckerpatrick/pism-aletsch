@@ -1,0 +1,8 @@
+2. Provide these fields to '-atmosphere given -atmosphere_given_file my_forcing.nc' AND '-atmosphere_lapse_rate_file  my_forcing.nc’. Set the lapse rates with '	-precip_lapse_rate’ and 	'-temp_lapse_rate’ This way, T and P will be lapse-rate adjusted with respect to the surface elevation of the met station.
+
+
+Use -surface pdd to get climatic mass balance from temperature and precip.
+
+
+
+mpirun -n 4 pismr -config_override e_2.25e-24_config.nc -boot_file pism_Aletsch_1880.nc -skip -skip_max 100 -Mx 176 -My 339 -Mz 50 -Lz 1000 -surface given -surface_given_file aletsch_cmb_1865-2008.nc -sia_flow_law isothermal_glen -ssa_flow_law isothermal_glen -no_energy -ts_file /cluster/scratch_xl/public/pbecker/ts_noslide_a100m_rate_2.25e-24_1880-2008.nc -ts_times daily -extra_file /cluster/scratch_xl/public/pbecker/ex_noslide_a100m_rate_2.25e-24_1880-2008.nc -extra_times monthly -extra_vars usurf,h_x,h_y,csurf,lon,diffusivity,taud_mag,hardav,topg,velbar,tauc,lat,taud,mask,thk,cbase,dHdt,flux_divergence,velbase,velsurf -o_order zyx -o /cluster/scratch_xl/public/pbecker/state_noslide_a100m_rate_2.25e-24_1880-2008.nc -o_size big -time_file time_1880-2008.nc -calendar gregorian
