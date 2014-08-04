@@ -122,7 +122,7 @@ Mz=50
 
 
 GRID="-Mx $Mx -My $My -Mz $Mz -Lz 1000"
-COUPLER="-atmosphere given -atmosphere_given_file climateforcing_small.nc -atmosphere_lapse_rate_file  climateforcing_small.nc -precip_lapse_rate -temp_lapse_rate"
+COUPLER="-atmosphere given -atmosphere_given_file climateforcing_small.nc -atmosphere_lapse_rate_file  climateforcing_small.nc -precip_lapse_rate -temp_lapse_rate -surface pdd -pdd_factor_snow 4 -pdd_factor_ice 8"
 PHYSICS="-sia_flow_law isothermal_glen -ssa_flow_law isothermal_glen -no_energy"
 INNAME=pism_Aletsch_1880.nc
 
@@ -134,8 +134,8 @@ echo ""
 
 EXVARS="usurf,h_x,h_y,csurf,lon,diffusivity,taud_mag,hardav,topg,velbar,tauc,lat,taud,mask,thk,cbase,dHdt,flux_divergence,velbase,velsurf"
 
-OUT_DIR="/cluster/scratch_xl/public/pbecker/"
-OUTNAME=noslide_a${GS}m_rate_${RATE_FACTOR}_1880-2008.nc
+OUT_DIR="/cluster/scratch_xp/public/pbecker/"
+OUTNAME=testatmo_a${GS}m_rate_${RATE_FACTOR}_1880-2008.nc
 OUTNAME_STATE=${OUT_DIR}state_$OUTNAME
 OUTNAME_EXTRA=${OUT_DIR}ex_$OUTNAME
 OUTNAME_TS=${OUT_DIR}ts_$OUTNAME
