@@ -9,9 +9,13 @@ from dateutil.parser import parse
 from datetime import datetime
 import time
 
-
-def precipitation_conversion(prec_data):
+# converts precipitation from mm d-1 to kg m-2 year-1
+def precipitation_conversionMmPerDayToKgPerM2Per1(prec_data):
     return prec_data * 0.365
+
+# converts precipitation from mm d-1 to kg m-2 year-1
+def precipitation_conversionMmPerDayToMPerS(prec_data):
+    return prec_data * 0.000000012
 
 try:
     import netCDF4 as netCDF
@@ -56,7 +60,8 @@ anzahlTage = climatedata.shape[0]
 print('converting climate data...')
 temp_data = climatedata[:,temp_row]
 prec_data = climatedata[:,prec_row]
-prec_data = precipitation_conversion(prec_data)
+#prec_data = precipitation_conversionMmPerDayToKgPerM2Per1(prec_data)
+prec_data = precipitation_conversionMmPerDayToMPerS(prec_data)
 
 # Aufbau NetCDF-Datei
 print('setup netCDF...')
@@ -161,8 +166,9 @@ temp_var.comment = '''test'''
 print('create prec variable...')
 prec_var = nc.createVariable('precipitation', 'f',dimensions=(time_dim, y_dim, x_dim),fill_value=fill_value)
 prec_var.long_name = 'precipitation'
-prec_var.units = 'kg m-2 year-1'
-prec_var.comment = '''test'''
+#prec_var.units = 'kg m-2 year-1'
+prec_var.units = 'm s-1'
+prec_var.comment = '''converted prec. data from mm/d to m s-1'''
 
 print('create surf elevation variable...')
 prec_var = nc.createVariable('surface_elevation', 'f',dimensions=(y_dim, x_dim),fill_value=fill_value)
