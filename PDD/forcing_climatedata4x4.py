@@ -31,6 +31,8 @@ netcdfFlavor = 'NETCDF3_CLASSIC'
 
 outname = 'climateforcing_small.nc'
 
+# FIXME
+# This calculation is wrong, it ignores leap years. you assume a 365 day calendar here. use the appropriate python time functions (don't remeber the names right now) to calculate the number of days between to dates for the gregorian proleptic calendar--your input file uses a gregorian calendar.
 zeitspanne =(end_date.year - start_date.year)*365 + end_date.day - start_date.day
 print('zeitspanne ' + str(zeitspanne))
 
