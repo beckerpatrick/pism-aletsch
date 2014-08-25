@@ -10,10 +10,6 @@ from datetime import datetime
 import time
 
 # converts precipitation from mm d-1 to kg m-2 year-1
-def precipitation_conversionMmPerDayToKgPerM2Per1(prec_data):
-    return prec_data * 0.365
-
-# converts precipitation from mm d-1 to kg m-2 year-1
 def precipitation_conversionMmPerDayToMPerS(prec_data):
     return prec_data * 0.000000012
 
@@ -60,7 +56,6 @@ anzahlTage = climatedata.shape[0]
 print('converting climate data...')
 temp_data = climatedata[:,temp_row]
 prec_data = climatedata[:,prec_row]
-#prec_data = precipitation_conversionMmPerDayToKgPerM2Per1(prec_data)
 prec_data = precipitation_conversionMmPerDayToMPerS(prec_data)
 
 # Aufbau NetCDF-Datei
@@ -174,7 +169,7 @@ print('create surf elevation variable...')
 prec_var = nc.createVariable('surface_elevation', 'f',dimensions=(y_dim, x_dim),fill_value=fill_value)
 prec_var.long_name = 'surface_elevation of the wheater station'
 prec_var.units = 'm'
-prec_var.comment = '''elevation field whith surface elevation of the wheater station in every grid cell'''
+prec_var.comment = '''elevation field with surface elevation of the wheater station in every grid cell'''
 
 print('create temp_lapse_rate variable...')
 prec_var = nc.createVariable('temp_lapse_rate', 'f',dimensions=(),fill_value=tempGradient)
