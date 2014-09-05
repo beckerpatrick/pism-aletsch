@@ -31,7 +31,8 @@ netcdfFlavor = 'NETCDF3_CLASSIC'
 
 outname = 'climateforcing_small.nc'
 
-zeitspanne =(end_date.year - start_date.year)*365 + end_date.day - start_date.day
+#HIER FEHLER: NICHT JEDES JAHR HAT 365 TAGE!
+zeitspanne = (end_date - start_date).days
 print('zeitspanne ' + str(zeitspanne))
 
 # Klimadaten erfassen
@@ -72,8 +73,16 @@ if time_dim not in nc.dimensions.keys():
 
 # x und y erzeugen
 print('creating spatial dimensions...')
-easting = np.arange(634000, 651500, 8750) # 2x2-Netz aufspannen (8750 *2 = 651500-634000)
-northing = np.arange(123600, 157500, 16950) # 2x2-Netz aufspannen (16950 *2 = 157500-123600)
+#easting = np.arange(634000, 651500, 8750) # 2x2-Netz aufspannen (8750 *2 = 651500-634000)
+#northing = np.arange(123600, 157500, 16950) # 2x2-Netz aufspannen (16950 *2 = 157500-123600)
+easting_koor_i=634000
+easting_koor_f=651500
+easting_interval=8750
+northing_koor_i=123600
+northing_koor_f=157500
+northing_interval=16950
+easting = np.arange(easting_koor_i, easting_koor_f+easting_interval, easting_interval) # 2x2-Netz aufspannen (8750 *2 = 651500-634000)
+northing = np.arange(northing_koor_i, northing_koor_f+northing_interval, northing_interval) # 2x2-Netz aufspannen (16950 *2 = 157500-123600)
 fill_value = -9999
 x_dim = 'x'
 if x_dim not in nc.dimensions.keys():
@@ -189,7 +198,7 @@ start_day = 0
 end_day = anzahlTage
 
 print('create records...')
-#for day in range(start_day,end_day-365): #ACHTUNG!!! ZUM TEST nur 10 Tage statt 53000 (end_day)
+#for day in range(start_day,10): #ACHTUNG!!! ZUM TEST nur 10 Tage statt 53000 (end_day)
 for day in range(0,zeitspanne):
     print("processing record {} of {}".format(day, zeitspanne))
     nc.variables['air_temp'][day,:] = temp_data[day]
