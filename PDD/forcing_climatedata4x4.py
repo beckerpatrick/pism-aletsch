@@ -31,7 +31,6 @@ netcdfFlavor = 'NETCDF3_CLASSIC'
 
 outname = 'climateforcing_small.nc'
 
-#HIER FEHLER: NICHT JEDES JAHR HAT 365 TAGE!
 zeitspanne = (end_date - start_date).days
 print('zeitspanne ' + str(zeitspanne))
 
